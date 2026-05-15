@@ -1,0 +1,131 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "Sophia": {
+      "mode": "primary",
+      "description": "Основной агент для работы с научной литературой по нейробиологии гиппокампа. Координирует поиск, анализ и написание текстов на основе базы из ~12000 статей.",
+      "color" : "#1FFF64",
+      "prompt": "{file:./.opencode/prompts/Sophia.txt}",
+
+      "temperature": 0.3,
+      "tools": {
+        "edit": true,
+        "bash": true
+      },
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "ask",
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "ls *": "allow",
+          "mkdir *": "allow",
+          "grep *": "allow",
+        }
+      }
+    },
+
+    "searcher": {
+      "mode": "subagent",
+      "description": "Поиск релевантных статей в базе данных. Использует SQL-запросы, семантический поиск через ChromaDB, и кластерную навигацию. Возвращает ранжированный список статей с метаданными и релевантностью.",
+      "prompt": "{file:./.opencode/agents/searcher.md}",
+
+      "model": "{env:SEACHER_MODEL}",
+
+      "temperature": 0.1,
+      "tools": {
+        "edit": true,
+        "bash": true
+      },
+      "permission": {
+        "bash": {
+          "*": "ask",
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "ls *": "allow",
+          "mkdir *": "allow",
+          "grep *": "allow",
+        }
+      }
+    },
+    "reader": {
+      "mode": "subagent",
+      "description": "Глубокое чтение конкретных статей и извлечение фактов, данных, методов, гипотез. Работает с полными текстами, создает структурированные конспекты. Может извлекать рисунки из PDF.",
+      "prompt": "{file:./.opencode/agents/reader.md}",
+
+      "model": "{env:READER_MODEL}",
+
+      "temperature": 0.3,
+      "tools": {
+        "edit": true,
+        "bash": true,
+      },
+      "permission": {
+        "bash": {
+          "*": "ask",
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "ls *": "allow",
+          "mkdir *": "allow",
+          "grep *": "allow",
+        }
+      }
+    },
+    "synthesizer": {
+      "mode": "subagent",
+      "description": "Синтез информации из множества конспектов статей. Выявляет общие паттерны, противоречия, пробелы в знаниях. Создает структурированные обзоры и сравнительные таблицы.",
+      "prompt": "{file:./.opencode/agents/synthesizer.md}",
+
+      "model": "{env:SYNTHESIZER_MODEL}",
+
+      "temperature": 0.5,
+      "tools": {
+        "edit": true,
+        "bash": true
+      },
+      "permission": {
+        "bash": {
+          "*": "ask",
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "ls *": "allow",
+          "mkdir *": "allow",
+          "grep *": "allow",
+        }
+      }
+    },
+    "writer": {
+      "mode": "subagent",
+      "description": "Написание финальных научных текстов: введения, обсуждения, обзоры, протоколы. Пишет на английском языке в академическом стиле с корректным цитированием.",
+      "prompt": "{file:./.opencode/agents/writer.md}",
+      "temperature": 0.7,
+
+      "model": "{env:WRITER_MODEL}",
+
+      "tools": {
+        "edit": true,
+        "bash": true
+      },
+      "permission": {
+        "bash": {
+          "*": "ask",
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "wc *": "allow",
+          "ls *": "allow",
+          "mkdir *": "allow",
+          "grep *": "allow",
+        }
+      }
+    }
+  }
+}
