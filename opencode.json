@@ -1,12 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "zotero": {
+      "type": "local",
+      "command": ["opencode-zotero-mcp"],
+      "enabled": true
+    }
+  },
   "agent": {
     "Sophia": {
       "mode": "primary",
-      "description": "Основной агент для работы с научной литературой по нейробиологии гиппокампа. Координирует поиск, анализ и написание текстов на основе базы из ~12000 статей.",
-      "color" : "#1FFF64",
+      "description": "Универсальный научный ИИ-ассистент для работы с локальной Zotero-библиотекой. Координирует поиск литературы, глубокое чтение, синтез и написание научных текстов. Специализация пользователя подгружается из user_profile.md.",
+      "color": "#1FFF64",
       "prompt": "{file:./.opencode/prompts/Sophia.txt}",
-
       "temperature": 0.3,
       "tools": {
         "edit": true,
@@ -22,18 +28,16 @@
           "wc *": "allow",
           "ls *": "allow",
           "mkdir *": "allow",
-          "grep *": "allow",
+          "grep *": "allow"
         }
       }
     },
 
     "searcher": {
       "mode": "subagent",
-      "description": "Поиск релевантных статей в базе данных. Использует SQL-запросы, семантический поиск через ChromaDB, и кластерную навигацию. Возвращает ранжированный список статей с метаданными и релевантностью.",
+      "description": "Поиск релевантных статей в Zotero-библиотеке. Использует zotero_search_library (по метаданным и тегам), zotero_search_fulltext (по полным текстам), zotero_get_collections (навигация по коллекциям). Возвращает ранжированный список статей с обоснованием релевантности.",
       "prompt": "{file:./.opencode/agents/searcher.md}",
-
-      "model": "{env:SEACHER_MODEL}",
-
+      "model": "{env:SEARCHER_MODEL}",
       "temperature": 0.1,
       "tools": {
         "edit": true,
@@ -48,21 +52,20 @@
           "wc *": "allow",
           "ls *": "allow",
           "mkdir *": "allow",
-          "grep *": "allow",
+          "grep *": "allow"
         }
       }
     },
+
     "reader": {
       "mode": "subagent",
-      "description": "Глубокое чтение конкретных статей и извлечение фактов, данных, методов, гипотез. Работает с полными текстами, создает структурированные конспекты. Может извлекать рисунки из PDF.",
+      "description": "Глубокое чтение конкретных статей из Zotero-библиотеки. Извлекает метаданные, абстракты, полные тексты и аннотации пользователя. Создаёт структурированные конспекты с цитатами и числовыми данными.",
       "prompt": "{file:./.opencode/agents/reader.md}",
-
       "model": "{env:READER_MODEL}",
-
       "temperature": 0.3,
       "tools": {
         "edit": true,
-        "bash": true,
+        "bash": true
       },
       "permission": {
         "bash": {
@@ -73,17 +76,16 @@
           "wc *": "allow",
           "ls *": "allow",
           "mkdir *": "allow",
-          "grep *": "allow",
+          "grep *": "allow"
         }
       }
     },
+
     "synthesizer": {
       "mode": "subagent",
-      "description": "Синтез информации из множества конспектов статей. Выявляет общие паттерны, противоречия, пробелы в знаниях. Создает структурированные обзоры и сравнительные таблицы.",
+      "description": "Синтез информации из множества конспектов статей. Выявляет общие паттерны, противоречия, пробелы в знаниях. Создаёт структурированные обзоры, сравнительные таблицы и аргументационные цепочки.",
       "prompt": "{file:./.opencode/agents/synthesizer.md}",
-
       "model": "{env:SYNTHESIZER_MODEL}",
-
       "temperature": 0.5,
       "tools": {
         "edit": true,
@@ -98,18 +100,17 @@
           "wc *": "allow",
           "ls *": "allow",
           "mkdir *": "allow",
-          "grep *": "allow",
+          "grep *": "allow"
         }
       }
     },
+
     "writer": {
       "mode": "subagent",
-      "description": "Написание финальных научных текстов: введения, обсуждения, обзоры, протоколы. Пишет на английском языке в академическом стиле с корректным цитированием.",
+      "description": "Написание финальных научных текстов: введения, обсуждения, обзоры, протоколы, презентации. Академический стиль с корректным цитированием. Язык вывода зависит от задачи и специализации пользователя.",
       "prompt": "{file:./.opencode/agents/writer.md}",
-      "temperature": 0.7,
-
       "model": "{env:WRITER_MODEL}",
-
+      "temperature": 0.7,
       "tools": {
         "edit": true,
         "bash": true
@@ -123,7 +124,7 @@
           "wc *": "allow",
           "ls *": "allow",
           "mkdir *": "allow",
-          "grep *": "allow",
+          "grep *": "allow"
         }
       }
     }

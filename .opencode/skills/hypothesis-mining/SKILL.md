@@ -1,11 +1,11 @@
 ---
 name: hypothesis-mining
-description: Mine the literature for hypotheses, open questions, and knowledge gaps in hippocampus neuroscience. Extract unanswered questions from Discussion sections and systematize them into structured hypothesis lists.
+description: Mine the user's Zotero library for hypotheses, open questions, and knowledge gaps. Extract unanswered questions from Discussion sections and systematize them into structured hypothesis lists.
 ---
 
 # Purpose
 
-Систематически извлечь из литературы нерешенные вопросы, гипотезы и пробелы в знаниях по заданной теме. Создать структурированный список гипотез с указанием их источника и уровня обоснованности.
+Систематически извлечь из литературы в Zotero нерешённые вопросы, гипотезы и пробелы в знаниях по заданной теме. Создать структурированный список гипотез с указанием их источника и уровня обоснованности.
 
 # When to use
 
@@ -26,16 +26,22 @@ description: Mine the literature for hypotheses, open questions, and knowledge g
 
 # Procedure
 
-**Шаг 1 — Поиск статей с гипотезами:**
-1. `semantic_search` по теме с акцентом на обзорные статьи
-2. `db_search` (keyword) с терминами: "remains unclear", "future work", "open question", "unknown", "further investigation", "not well understood", "poorly understood", "remains to be determined"
-3. `db_search` (mode: "sql") для поиска по полю full_text: `SELECT id, title, authors, date FROM Articles WHERE full_text LIKE '%remains unclear%' OR full_text LIKE '%open question%' OR full_text LIKE '%future studies%'`
+**Шаг 1 — Поиск статей с гипотезами в Zotero:**
+1. `zotero_search_library` (q=<тема>) — для обзорных статей и оригинальных работ
+2. `zotero_search_fulltext` с маркерами неопределённости:
+   - "remains unclear"
+   - "open question"
+   - "future work" / "future studies" / "future directions"
+   - "further investigation" / "remains to be determined"
+   - "poorly understood" / "not well understood"
+   - "it is unknown whether" / "whether ... remains"
+3. `zotero_search_annotations` — пользователь мог выделять такие фразы
 4. Фокус на Discussion секциях
 
 **Шаг 2 — Глубокое чтение Discussion:**
 1. Для топ-кандидатов используй @reader
-2. `read_article` (id, section: "discussion") для каждой статьи
-3. Извлекай конкретные формулировки гипотез и нерешенных вопросов
+2. Извлекай конкретные формулировки гипотез и нерешённых вопросов (с цитатой и номером страницы, если есть)
+3. Запроси `zotero_get_annotations` — пользователь мог уже делать пометки на этих формулировках
 
 **Шаг 3 — Систематизация:**
 1. Передай конспекты @synthesizer
@@ -51,7 +57,7 @@ description: Mine the literature for hypotheses, open questions, and knowledge g
 
 # Output format
 
-Текст на АНГЛИЙСКОМ языке:
+Текст на языке выходных текстов (см. `user_profile.md`, по умолчанию — английский):
 
 ```markdown
 # Hypothesis Mining: [Topic]
@@ -63,7 +69,7 @@ Categories: M
 ## Category 1: [Theme]
 
 ### Hypothesis 1: [Concise statement]
-- **Source**: (Author et al., Year)
+- **Source**: (Author et al., Year, itemKey: ABCD1234)
 - **Evidence level**: Solid / Suggestive / Speculative
 - **Supporting studies**: N
 - **Testability**: How this could be tested
@@ -86,12 +92,13 @@ Categories: M
 # Quality bar (self-check)
 
 - [ ] Использованы специальные поисковые запросы для Discussion секций
-- [ ] Каждая гипотеза имеет точную ссылку на источник
+- [ ] Каждая гипотеза имеет точную ссылку на источник (Author, Year, itemKey)
 - [ ] Указан уровень обоснованности для каждой гипотезы
 - [ ] Гипотезы сгруппированы тематически
 - [ ] Отмечены случаи, когда гипотезы противоречат друг другу
 - [ ] Нет выдуманных гипотез — все из конкретных статей
 - [ ] Для проверяемых гипотез предложены подходы к проверке
+- [ ] Учтены пользовательские аннотации (если есть)
 
 # Anti-patterns
 
@@ -104,4 +111,4 @@ Categories: M
 # Examples
 
 **Input:** «Какие гипотезы существуют о роли sharp-wave ripples в консолидации памяти?»
-**Output:** 15-25 гипотез, сгруппированных в 4 категории: (1) reactivation of memory traces, (2) synaptic plasticity during SWRs, (3) cortico-hippocampal dialogue, (4) computational theories. Для каждой — источник, уровень обоснованности, проверяемость. Cross-cutting: contradiction between "reactivation" and "interference" theories.
+**Output:** 15-25 гипотез, сгруппированных в 4 категории: (1) reactivation of memory traces, (2) synaptic plasticity during SWRs, (3) cortico-hippocampal dialogue, (4) computational theories. Для каждой — источник (Author, Year, itemKey), уровень обоснованности, проверяемость. Cross-cutting: contradiction between "reactivation" and "interference" theories.

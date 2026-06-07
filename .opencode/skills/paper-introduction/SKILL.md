@@ -1,11 +1,11 @@
 ---
 name: paper-introduction
-description: Write an Introduction section for a computational neuroscience paper. Narrow-down structure from broad context to specific research question, grounded in 5-15 key citations from the database.
+description: Write an Introduction section for a scientific paper. Narrow-down structure from broad context to specific research question, grounded in 5-15 key citations from the user's Zotero library.
 ---
 
 # Purpose
 
-Написать секцию Introduction для научной статьи в области вычислительной нейронауки. Структура «воронка»: от широкого контекста к конкретному исследовательскому вопросу. Все утверждения подкреплены ссылками из базы.
+Написать секцию Introduction для научной статьи. Структура «воронка»: от широкого контекста к конкретному исследовательскому вопросу. Все утверждения подкреплены ссылками из Zotero-библиотеки пользователя.
 
 # When to use
 
@@ -18,41 +18,42 @@ description: Write an Introduction section for a computational neuroscience pape
 
 Перед началом уточни у пользователя:
 - Тема статьи и ключевые результаты работы
-- Целевой журнал (влияет на объем и стиль)
-- Есть ли конкретные статьи, которые обязательно процитировать
-- Ожидаемый объем (обычно 3-6 параграфов, 800-1500 слов)
+- Целевой журнал (влияет на объём и стиль; см. `user_profile.md` → preferred journals)
+- Есть ли конкретные статьи, которые обязательно процитировать (itemKey)
+- Ожидаемый объём (обычно 3-6 параграфов, 800-1500 слов)
 
 # Procedure
 
 **Шаг 1 — Определи структуру:**
-1. Paragraph 1: широкий контекст (роль гиппокампа в исследуемой функции)
+1. Paragraph 1: широкий контекст (роль изучаемой системы/феномена)
 2. Paragraphs 2-3: сужение к конкретной теме, текущее состояние знаний
-3. Paragraphs 4-5: нерешенные вопросы, пробелы, противоречия
+3. Paragraphs 4-5: нерешённые вопросы, пробелы, противоречия
 4. Final paragraph: цель работы, гипотеза, подход
 
 **Шаг 2 — Целевой поиск под каждый параграф:**
-1. Для каждого аспекта используй `semantic_search` + `db_search` (keyword)
-2. Найди 2-4 ключевые статьи на каждый параграф
-3. Отбери только наиболее авторитетные и релевантные источники
+1. Для каждого аспекта выполни `zotero_search_library` + `zotero_search_fulltext` (через skill `search-strategy` в упрощённом виде)
+2. Используй `zotero_search_annotations` — пользователь мог уже оставлять выделения по теме
+3. Найди 2-4 ключевые статьи на каждый параграф
+4. Отбери только наиболее авторитетные и релевантные источники
 
 **Шаг 3 — Чтение и конспектирование:**
 1. Для отобранных статей (5-15) используй @reader
 2. Фокус: ключевые findings, методы, интерпретации
-3. Конспекты в `output/notes/`
+3. Конспекты в `output/notes/<itemKey>_<short_title>.md`
 
 **Шаг 4 — Написание:**
 1. Передай конспекты и структуру субагенту @writer
-2. Writer создает текст Introduction с цитированием
+2. Writer создаёт текст Introduction с цитированием
 3. Результат: `output/drafts/introduction_<topic>_<date>.md`
 
 # Output format
 
-Текст на АНГЛИЙСКОМ языке в академическом стиле:
+Текст на языке выходных текстов (см. `user_profile.md`, по умолчанию — английский), академический стиль:
 
 ```markdown
 # Introduction
 
-[Paragraph 1: Broad context — hippocampus and the cognitive function]
+[Paragraph 1: Broad context]
 
 [Paragraph 2: What is known about the specific mechanism]
 
@@ -63,19 +64,19 @@ description: Write an Introduction section for a computational neuroscience pape
 [Paragraph 5: "In this study, we..." — aim, hypothesis, approach]
 
 ## References
-[Chicago Author-Date format]
+[Стиль из user_profile.md; Zotero itemKey для каждой]
 ```
 
-Стиль: активный залог, без разговорных выражений, уровень Nature Neuroscience / Neuron.
+Стиль: активный залог, без разговорных выражений, уровень целевого журнала.
 
 # Quality bar (self-check)
 
 - [ ] Структура «воронка»: от общего к частному прослеживается
-- [ ] Каждое утверждение имеет ссылку на конкретную статью
+- [ ] Каждое утверждение имеет ссылку на конкретную статью (Author, Year) + Zotero itemKey
 - [ ] Использовано 5-15 источников (не больше, не меньше)
-- [ ] Последний параграф четко формулирует цель и гипотезу
-- [ ] Текст на английском, академический стиль
-- [ ] Нет выдуманных ссылок — все статьи из базы
+- [ ] Последний параграф чётко формулирует цель и гипотезу
+- [ ] Текст на языке из `user_profile.md`
+- [ ] Нет выдуманных ссылок — все статьи из Zotero
 - [ ] Нет избыточного цитирования (5+ ссылок на одно утверждение)
 - [ ] Все BibTeX-записи валидны (если запрошены)
 
@@ -91,4 +92,4 @@ description: Write an Introduction section for a computational neuroscience pape
 # Examples
 
 **Input:** «Напиши введение для статьи о роли grid cells в энторинальной коре для пространственной навигации»
-**Output:** 5 параграфов: (1) spatial navigation overview, (2) discovery of grid cells, (3) grid cell models, (4) open questions about grid-hippocampus interaction, (5) "Here we investigate how grid cell input shapes hippocampal place field formation using a computational model...". 12 ссылок.
+**Output:** 5 параграфов: (1) spatial navigation overview, (2) discovery of grid cells, (3) grid cell models, (4) open questions about grid-hippocampus interaction, (5) "Here we investigate how grid cell input shapes hippocampal place field formation using a computational model...". 12 ссылок с Zotero itemKey.

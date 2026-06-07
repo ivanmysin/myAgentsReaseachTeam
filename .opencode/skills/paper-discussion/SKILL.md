@@ -1,6 +1,6 @@
 ---
 name: paper-discussion
-description: Write a Discussion section that interprets computational neuroscience results in the context of existing literature. Compare findings, propose mechanisms, acknowledge limitations, and suggest future work.
+description: Write a Discussion section that interprets research results in the context of existing literature. Compare findings, propose mechanisms, acknowledge limitations, and suggest future work. Citations come from the user's Zotero library.
 ---
 
 # Purpose
@@ -11,7 +11,7 @@ description: Write a Discussion section that interprets computational neuroscien
 
 Активируй этот навык когда:
 - Пользователь просит написать «обсуждение», «discussion» к статье
-- Нужно интерпретировать результаты моделирования или анализа данных
+- Нужно интерпретировать результаты исследования или анализа
 - Требуется сравнить полученные результаты с литературой
 
 # Inputs needed
@@ -28,10 +28,11 @@ description: Write a Discussion section that interprets computational neuroscien
 1. Разложи результаты пользователя на интерпретируемые блоки
 2. Для каждого блока определи: что сравнивать, какие механизмы предложить
 
-**Шаг 2 — Поиск сравнимых данных:**
-1. Для каждого результата — `semantic_search` по релевантным концепциям
-2. Приоритет: статьи с числовыми данными для сравнения
-3. Целевой объем: 15-50 статей
+**Шаг 2 — Поиск сравнимых данных в Zotero:**
+1. Для каждого результата — `zotero_search_library` + `zotero_search_fulltext` по релевантным концепциям
+2. Используй `zotero_search_annotations` — пользователь мог оставлять заметки по похожим результатам
+3. Приоритет: статьи с числовыми данными для сравнения
+4. Целевой объём: 15-50 статей
 
 **Шаг 3 — Чтение и извлечение:**
 1. Используй @reader для статей с наиболее сравнимыми данными
@@ -45,11 +46,11 @@ description: Write a Discussion section that interprets computational neuroscien
 
 **Шаг 5 — Написание:**
 1. Передай синтез @writer с указанием ключевых результатов
-2. Writer создает Discussion с полной цепочкой: резюме → сравнение → интерпретация → ограничения → перспективы
+2. Writer создаёт Discussion с полной цепочкой: резюме → сравнение → интерпретация → ограничения → перспективы
 
 # Output format
 
-Текст на АНГЛИЙСКОМ языке:
+Текст на языке выходных текстов (см. `user_profile.md`, по умолчанию — английский):
 
 ```markdown
 # Discussion
@@ -65,6 +66,7 @@ description: Write a Discussion section that interprets computational neuroscien
 ## Conclusions and Future Directions
 
 ## References
+[Стиль из user_profile.md; Zotero itemKey для каждой]
 ```
 
 Структура каждого параграфа с обсуждением результата:
@@ -76,12 +78,12 @@ description: Write a Discussion section that interprets computational neuroscien
 # Quality bar (self-check)
 
 - [ ] Первый параграф — чистое резюме результатов БЕЗ ссылок
-- [ ] Каждый результат обсужден в контексте минимум 2-3 статей
+- [ ] Каждый результат обсуждён в контексте минимум 2-3 статей
 - [ ] Числовые сравнения точны (цифры перепроверены)
 - [ ] Честно указаны ограничения исследования
 - [ ] Нет голословных интерпретаций без ссылок
-- [ ] Все ссылки из базы, Chicago Author-Date
-- [ ] Текст на английском, академический стиль
+- [ ] Все ссылки из Zotero с itemKey
+- [ ] Текст на языке из `user_profile.md`, академический стиль
 - [ ] Отмечены противоречия с литературой (если есть), без замалчивания
 
 # Anti-patterns
@@ -96,4 +98,4 @@ description: Write a Discussion section that interprets computational neuroscien
 # Examples
 
 **Input:** «Напиши обсуждение: наша модель показывает, что тета-модуляция усиливает пластичность в CA3-CA1 синапсах на 40% по сравнению с контролем»
-**Output:** Параграф обсуждает этот finding: сравнивает с экспериментальными данными по LTP в CA1 (конкретные цифры из 3-4 статей), предлагает механизм через STDP + тета-фазу, отмечает ограничение (модель не учитывает ингибирование), предлагает проверку в in vitro экспериментах.
+**Output:** Параграф обсуждает этот finding: сравнивает с экспериментальными данными по LTP в CA1 (конкретные цифры из 3-4 статей), предлагает механизм через STDP + тета-фазу, отмечает ограничение (модель не учитывает ингибирование), предлагает проверку в in vitro экспериментах. Все ссылки с Zotero itemKey.

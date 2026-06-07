@@ -4,6 +4,51 @@
 
 # Полная конфигурация литературного агента для opencode
 
+> **⚠️ Внимание:** основная часть этого документа (ниже) описывает **старую архитектуру** с локальной SQLite+ChromaDB базой статей. Актуальная конфигурация теперь работает через **Zotero MCP**. См. краткое описание новой архитектуры в `.opencode/README.md` и непосредственно в файлах конфигурации.
+
+## Краткая схема новой архитектуры (Zotero MCP)
+
+```
+project-directory/
+├── opencode.json                 # Конфигурация opencode + Zotero MCP
+├── .opencode/
+│   ├── user_profile.md           # Специализация и предпочтения пользователя
+│   ├── agents/
+│   │   ├── searcher.md           # Субагент поиска (zotero_search_*)
+│   │   ├── reader.md             # Субагент чтения (zotero_get_content, zotero_get_annotations)
+│   │   ├── synthesizer.md        # Субагент синтеза
+│   │   └── writer.md             # Субагент написания текстов
+│   ├── prompts/
+│   │   └── Sophia.txt            # Системный промпт основного агента
+│   └── skills/
+│       ├── search-strategy/      # Многоканальный поиск в Zotero
+│       ├── targeted-qa/          # Точные ответы на вопросы
+│       ├── literature-review/    # Полные обзоры
+│       ├── paper-introduction/   # Введения к статьям
+│       ├── paper-discussion/     # Обсуждения
+│       ├── scientific-presentation/  # Marp-презентации
+│       ├── experiment-protocol/  # Протоколы экспериментов
+│       └── hypothesis-mining/    # Извлечение гипотез
+└── output/                       # Результаты работы
+    ├── logs/                     # Логи сессий
+    ├── notes/                    # Конспекты статей
+    ├── drafts/                   # Черновики текстов
+    ├── figures/                  # Изображения (пользователь кладёт вручную)
+    └── presentations/            # Marp-слайды
+```
+
+**Что изменилось:**
+- Источник данных: локальная БД (SQLite + ChromaDB) → Zotero-библиотека через MCP
+- Все обращения к `db_search`/`semantic_search`/`read_article`/`extract_figures`/`cluster_browse` заменены на `zotero_*` MCP-инструменты
+- Семантический поиск (SPECTER2/ChromaDB) **удалён** — нет аналога в Zotero MCP
+- Извлечение рисунков из PDF **удалено** — пользователь добавляет вручную или как Zotero attachment
+- Узко-нейронаучные навыки (`data-mining-for-simulation`, `simulation-spec`) **удалены**
+- Специализация пользователя вынесена в `user_profile.md` (редактируется без правки системного промта)
+
+---
+
+## Старая архитектура (для справки)
+
 ## Структура файлов проекта
 
 ```
